@@ -16,8 +16,9 @@ class App extends Component {
         this.state = {
             matches: [],
             gamename: '',
+            numofplayers: '',
             gamesearches: [],
-            imageUrl: '',
+            gamecover: '',
             showGameDetails: false
         };
         this.handleChange = this.handleChange.bind(this);
@@ -48,7 +49,7 @@ class App extends Component {
             .asArray()
             .then(matches => {
                 this.setState({ matches });
-            });
+        });
     }
     displayMatchesOnLoad() {
         // Check if real user
@@ -93,9 +94,9 @@ class App extends Component {
                             .where('id = '+response.data[0].cover)
                             .request("/covers")
                             .then(response2 => {
-                                console.log('https://images.igdb.com/igdb/image/upload/t_cover_big/'+response2.data[0].image_id+'.jpg');
+                                //console.log('https://images.igdb.com/igdb/image/upload/t_cover_big/'+response2.data[0].image_id+'.jpg');
                                 this.setState({
-                                    imageUrl:'https://images.igdb.com/igdb/image/upload/t_cover_big/'+response2.data[0].image_id+'.jpg',
+                                    gamecover:'https://images.igdb.com/igdb/image/upload/t_cover_big/'+response2.data[0].image_id+'.jpg',
                                     showGameDetails: true
                                 });
                             })
@@ -105,15 +106,16 @@ class App extends Component {
     }    
     addMatch(event) {
         event.preventDefault();
-        const { game, numofplayers } = this.state;
+        const { gamename, numofplayers, gamecover } = this.state;
         // insert the match into the remote Stitch DB
         // then re-query the DB and display the new todos
         this.db
             .collection("match")
             .insertOne({
                 owner_id: this.client.auth.user.id,
-                game: game,
-                numofplayers: numofplayers
+                game: gamename,
+                numofplayers: numofplayers,
+                gamecover: gamecover
             })
             .then(this.displayMatches)
             .catch(console.error);
@@ -157,7 +159,7 @@ class App extends Component {
                     { this.state.showGameDetails &&                   
                         <div className="AddMatchDetails" id="AddMatchDetails">
                             <div>
-                                <img src={this.state.imageUrl} id="createGameImg" alt="Image URL" style={{width:'150px'}}/>
+                                <img src={this.state.gamecover} alt="Game Cover" style={{width:'150px'}}/>
                             </div>
                             <div>
                                 <form onSubmit={this.addMatch}>
@@ -187,7 +189,7 @@ class App extends Component {
                     <div className="matches">
                         <h3>Active Matches</h3>
                         {this.state.matches.map(match => {
-                            return <button className="match-item" key={match._id}>Game: {match.game}<br/>Owner: {this.client.auth.user.name}<br/># of Players: {match.numofplayers}</button>;
+                            return <button className="match-item" key={match._id}>Game: {match.game}<br/>Owner: {this.client.auth.user.id}<br/># of Players: {match.numofplayers}</button>;
                         })}
                     </div>
                 </div>
