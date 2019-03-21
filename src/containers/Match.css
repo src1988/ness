@@ -1,0 +1,31 @@
+.AddMatchDetails{
+  display:flex;
+  flex-direction: row;
+}
+.AddMatchDetails > div{
+  flex:1;
+}
+.Matches{
+  text-align: center;
+}
+.MatchItem{
+  width:200px;
+  text-align: center;
+  background-color:#ccc;
+  float:left;
+  margin:10px 10px;
+  padding:15px;
+  border:0;
+  border-radius:2px;
+}
+.MatchItem:hover{
+  background-color:#c3c3c3;
+}
+.CreateMatch{
+  width:500px;
+  margin:0 auto;
+  text-align: left;
+}
+button:hover{
+  cursor: pointer;
+}
